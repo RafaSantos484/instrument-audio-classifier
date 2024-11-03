@@ -18,7 +18,7 @@ def run():
         preds[filename] = np.zeros(len(labels))
         duration = librosa.get_duration(path=f'test/{filename}')
         offset = 0
-        while offset < duration - train_audio_duration:
+        while offset < duration - train_audio_duration and offset <= 60:
             data = get_audio_features(
                 f'test/{filename}', offset=offset)
             inputs.append(data)
