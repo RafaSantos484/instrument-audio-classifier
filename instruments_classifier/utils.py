@@ -3,6 +3,7 @@ import shutil
 
 import librosa
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 
 def clear_folder(folder: str):
@@ -22,7 +23,7 @@ def copy_folders_content(src: str, dest: str):
                         os.path.join(dest, foldername))
 
 
-def get_audio_features(path: str, duration=None, offset=None):
+def get_svm_audio_features(path: str, duration=None, offset=None):
     y, sr = librosa.load(path, duration=duration, offset=offset)
 
     features = {
@@ -42,7 +43,10 @@ def get_audio_features(path: str, duration=None, offset=None):
     return feature_vector
 
 
-def get_mfccs_feature(path: str, duration=None, offset=None):
+def get_cnn_feature(path: str, duration=None, offset=None):
     y, sr = librosa.load(path, duration=duration, offset=offset)
-    mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-    return mfccs
+    scaler = StandardScaler()
+
+    # return librosa.feature.melspectrogram(y=y, sr=sr)
+    return scaler.fit_transform(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13))
+    # return librosa.feature.spectral_bandwidth(y=y, sr=sr)

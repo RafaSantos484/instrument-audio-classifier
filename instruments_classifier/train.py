@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import librosa
 import joblib
 
-from .utils import get_audio_features
+from .utils import get_svm_audio_features
 from params import data_dirs, max_audios, train_audio_duration
 
 
@@ -25,7 +25,7 @@ def run():
             duration = librosa.get_duration(path=path)
             offset = 0
             while offset <= duration - train_audio_duration:
-                data = get_audio_features(
+                data = get_svm_audio_features(
                     path, duration=train_audio_duration, offset=offset)
                 X.append(data)
                 y.append(i)

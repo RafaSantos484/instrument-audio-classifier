@@ -4,7 +4,7 @@ import numpy as np
 import librosa
 import tensorflow as tf
 
-from .utils import get_audio_features, get_mfccs_feature
+from .utils import get_svm_audio_features, get_cnn_feature
 from params import train_audio_duration, test_model
 
 
@@ -12,7 +12,7 @@ def get_classifier():
     if test_model == 'svm':
         return joblib.load('svm_model.joblib')
     else:
-        return tf.keras.models.load_model('cnn_model.h5')
+        return tf.keras.models.load_model('cnn_model.keras')
 
 
 def run():
@@ -25,12 +25,12 @@ def run():
         preds[filename] = np.zeros(len(labels))
         duration = librosa.get_duration(path=f'test/{filename}')
         offset = 0
-        while offset <= duration - train_audio_duration and offset <= 60:
+        while offset <= duration - train_audio_duration:
             if test_model == 'svm':
-                feature = get_audio_features(
+                feature = get_svm_audio_features(
                     f'test/{filename}', duration=train_audio_duration, offset=offset)
             else:
-                feature = get_mfccs_feature(
+                feature = get_cnn_feature(
                     f'test/{filename}', duration=train_audio_duration, offset=offset)
 
             inputs.append(feature)
