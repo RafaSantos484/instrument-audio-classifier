@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "instruments_classifier"
+version = "0.1.0"
+description = ""
+authors = ["Rafael Santos <rafaelsantos32141@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+librosa = "^0.10.2.post1"
+matplotlib = "^3.9.2"
+scikit-learn = "^1.5.2"
+joblib = "^1.4.2"
+
+[tool.poetry.scripts]
+seila = "instruments_classifier.seila:run"
+train = "instruments_classifier.train:run"
+test = "instruments_classifier.test:run"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
