@@ -12,6 +12,9 @@ librosa = "^0.10.2.post1"
 matplotlib = "^3.9.2"
 scikit-learn = "^1.5.2"
 joblib = "^1.4.2"
+tensorflow-io-gcs-filesystem = "0.31.0"
+tensorflow = "2.15.0"
+tensorflow-intel = {version="^2.15.0", platform = "win32"}
 
 [tool.poetry.scripts]
 seila = "instruments_classifier.seila:run"

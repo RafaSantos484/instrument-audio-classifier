@@ -3,7 +3,6 @@ import shutil
 
 import librosa
 import numpy as np
-from params import train_audio_duration
 
 
 def clear_folder(folder: str):
@@ -23,21 +22,21 @@ def copy_folders_content(src: str, dest: str):
                         os.path.join(dest, foldername))
 
 
-def get_audio_features(path: str, offset=None):
-    y, sr = librosa.load(path, duration=train_audio_duration, offset=offset)
+def get_audio_features(path: str, duration=None, offset=None):
+    y, sr = librosa.load(path, duration=duration, offset=offset)
 
     features = {
         # "spectrogram": librosa.feature.melspectrogram(y=y, sr=sr).mean(axis=1),
-        "mfccs": librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13),
+        # "mfccs": librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13).mean(axis=1),
         # "zcr": librosa.feature.zero_crossing_rate(y).mean(),
         # "chroma": librosa.feature.chroma_stft(y=y, sr=sr).mean(axis=1),
         # "rolloff": librosa.feature.spectral_rolloff(y=y, sr=sr).mean(),
-        # "centroid": librosa.feature.spectral_centroid(y=y, sr=sr).mean(),
-        # "bandwidth": librosa.feature.spectral_bandwidth(y=y, sr=sr).mean(),
+        "centroid": librosa.feature.spectral_centroid(y=y, sr=sr),
+        "bandwidth": librosa.feature.spectral_bandwidth(y=y, sr=sr),
         # "rmse": librosa.feature.rms(y=y).mean()
     }
 
     feature_vector = np.concatenate(
         [features[key].flatten() for key in features])
-    feature_vector = feature_vector / feature_vector.max()
+    # print(feature_vector.shape)
     return feature_vector

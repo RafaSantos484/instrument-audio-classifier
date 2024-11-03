@@ -3,10 +3,11 @@ import numpy as np
 from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import librosa
 import joblib
 
 from .utils import get_audio_features
-from params import data_dirs, max_audios
+from params import data_dirs, max_audios, train_audio_duration
 
 
 def run():
@@ -17,12 +18,22 @@ def run():
         y_labels.append(instrument_dir)
         print(f'Reading {instrument_dir} audios...')
         audio_paths = os.listdir(f'data/{instrument_dir}')
-        if max_audios != -1:
-            audio_paths = audio_paths[:max_audios]
-        for audio_path in audio_paths:
-            X.append(get_audio_features(f'data/{instrument_dir}/{audio_path}'))
-            y.append(i)
 
+        readed_audios = 0
+        for audio_path in audio_paths:
+            path = f'data/{instrument_dir}/{audio_path}'
+            duration = librosa.get_duration(path=path)
+            offset = 0
+            while offset <= duration - train_audio_duration:
+                data = get_audio_features(
+                    path, duration=train_audio_duration, offset=offset)
+                X.append(data)
+                y.append(i)
+                offset += train_audio_duration
+                readed_audios += 1
+
+            if max_audios != -1 and readed_audios >= max_audios:
+                break
 
     print('Training model...')
 
