@@ -16,14 +16,18 @@ def run():
     for i, instrument_dir in zip(range(len(data_dirs)), data_dirs):
         y_labels.append(instrument_dir)
         print(f'Reading {instrument_dir} audios...')
-        for audio_path in os.listdir(f'data/{instrument_dir}')[:max_audios]:
+        audio_paths = os.listdir(f'data/{instrument_dir}')
+        if max_audios != -1:
+            audio_paths = audio_paths[:max_audios]
+        for audio_path in audio_paths:
             X.append(get_audio_features(f'data/{instrument_dir}/{audio_path}'))
             y.append(i)
 
+
+    print('Training model...')
+
     X = np.array(X)
     y = np.array(y)
-
-    # X_flattened = X.reshape(X.shape[0], -1)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=42)

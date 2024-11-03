@@ -3,6 +3,7 @@ import shutil
 
 import librosa
 import numpy as np
+from params import train_audio_duration
 
 
 def clear_folder(folder: str):
@@ -22,9 +23,8 @@ def copy_folders_content(src: str, dest: str):
                         os.path.join(dest, foldername))
 
 
-def get_audio_features(path: str):
-    y, sr = librosa.load(path, duration=3)
-    # y = y[:66150]
+def get_audio_features(path: str, offset=None):
+    y, sr = librosa.load(path, duration=train_audio_duration, offset=offset)
 
     features = {
         # "spectrogram": librosa.feature.melspectrogram(y=y, sr=sr).mean(axis=1),
