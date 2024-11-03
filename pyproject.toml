@@ -20,6 +20,7 @@ tensorflow-intel = {version="^2.15.0", platform = "win32"}
 seila = "instruments_classifier.seila:run"
 train = "instruments_classifier.train:run"
 train2 = "instruments_classifier.train2:run"
+train3 = "instruments_classifier.train3:run"
 test = "instruments_classifier.test:run"
 
 [build-system]

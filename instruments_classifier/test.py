@@ -1,15 +1,22 @@
 import os
 import joblib
 import numpy as np
-from sklearn.svm import SVC
 import librosa
+import tensorflow as tf
 
-from .utils import get_audio_features
-from params import train_audio_duration
+from .utils import get_audio_features, get_mfccs_feature
+from params import train_audio_duration, test_model
+
+
+def get_classifier():
+    if test_model == 'svm':
+        return joblib.load('svm_model.joblib')
+    else:
+        return tf.keras.models.load_model('cnn_model.h5')
 
 
 def run():
-    clf: SVC = joblib.load('svm_model.joblib')
+    clf = get_classifier()
     inputs = []
     filenames = []
     preds = {}
@@ -19,9 +26,14 @@ def run():
         duration = librosa.get_duration(path=f'test/{filename}')
         offset = 0
         while offset <= duration - train_audio_duration and offset <= 60:
-            data = get_audio_features(
-                f'test/{filename}', duration=train_audio_duration, offset=offset)
-            inputs.append(data)
+            if test_model == 'svm':
+                feature = get_audio_features(
+                    f'test/{filename}', duration=train_audio_duration, offset=offset)
+            else:
+                feature = get_mfccs_feature(
+                    f'test/{filename}', duration=train_audio_duration, offset=offset)
+
+            inputs.append(feature)
             filenames.append(filename)
             offset += train_audio_duration
 
@@ -29,6 +41,8 @@ def run():
     predictions = clf.predict(inputs)
 
     for pred, filename in zip(predictions, filenames):
+        if test_model == 'cnn':
+            pred = np.argmax(pred)
         preds[filename][pred] += 1
 
     for filename, pred_array in preds.items():

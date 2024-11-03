@@ -40,3 +40,9 @@ def get_audio_features(path: str, duration=None, offset=None):
         [features[key].flatten() for key in features])
     # print(feature_vector.shape)
     return feature_vector
+
+
+def get_mfccs_feature(path: str, duration=None, offset=None):
+    y, sr = librosa.load(path, duration=duration, offset=offset)
+    mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+    return mfccs

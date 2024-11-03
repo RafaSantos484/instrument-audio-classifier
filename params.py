@@ -1,3 +1,6 @@
-data_dirs = ['Bass', 'Flute', 'Guitar', 'Piano']
+data_dirs = ['Bass', 'Flute', 'Guitar']
 max_audios = 1000
-train_audio_duration = 2
+train_audio_duration = 3
+
+# test_model = 'svm'
+test_model = 'cnn'
