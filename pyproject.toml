@@ -18,7 +18,6 @@ tensorflow-intel = {version="^2.15.0", platform = "win32"}
 
 [tool.poetry.scripts]
 train = "instruments_classifier.train:run"
-train2 = "instruments_classifier.train2:run"
 test = "instruments_classifier.test:run"
 
 [build-system]
