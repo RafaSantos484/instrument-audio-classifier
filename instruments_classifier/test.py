@@ -5,7 +5,7 @@ import librosa
 import tensorflow as tf
 
 from .utils import get_svm_audio_features, get_cnn_feature
-from params import train_audio_duration, test_model
+from params import audio_duration, test_model
 
 
 def get_classifier():
@@ -25,17 +25,18 @@ def run():
         preds[filename] = np.zeros(len(labels))
         duration = librosa.get_duration(path=f'test/{filename}')
         offset = 0
-        while offset <= duration - train_audio_duration:
+        while offset <= duration - audio_duration:
             if test_model == 'svm':
                 feature = get_svm_audio_features(
-                    f'test/{filename}', duration=train_audio_duration, offset=offset)
+                    f'test/{filename}', duration=audio_duration, offset=offset)
             else:
                 feature = get_cnn_feature(
-                    f'test/{filename}', duration=train_audio_duration, offset=offset)
+                    f'test/{filename}', duration=audio_duration, offset=offset)
 
-            inputs.append(feature)
-            filenames.append(filename)
-            offset += train_audio_duration
+            offset += audio_duration
+            if feature is not None:
+                inputs.append(feature)
+                filenames.append(filename)
 
     inputs = np.array(inputs)
     predictions = clf.predict(inputs)

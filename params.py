@@ -1,6 +1,9 @@
-data_dirs = ['Bass', 'Guitar', 'Piano', 'Violin']
-max_audios = 1000
-train_audio_duration = 5
+data_dirs = ['Bass', 'Guitar', 'Piano']
+max_audios = 100
+audio_duration = 5
+
+train_initial_offset = 30
+train_epochs = 25
 
 # test_model = 'svm'
 test_model = 'cnn'

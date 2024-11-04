@@ -3,7 +3,7 @@ import shutil
 
 import librosa
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+# from sklearn.preprocessing import StandardScaler
 
 
 def clear_folder(folder: str):
@@ -43,6 +43,7 @@ def get_svm_audio_features(path: str, duration=None, offset=None):
     return feature_vector
 
 
+'''
 def get_cnn_feature(path: str, duration=None, offset=None):
     y, sr = librosa.load(path, duration=duration, offset=offset)
     scaler = StandardScaler()
@@ -58,3 +59,19 @@ def get_cnn_feature(path: str, duration=None, offset=None):
     features = np.array([spectogram, mfcc])
     # return np.transpose(features, (1, 2, 0))
     return features.reshape(features.shape[1], features.shape[2], features.shape[0])
+'''
+
+
+def is_mute(audio_rms: np.ndarray):
+    return np.mean(audio_rms) < 1e-3
+
+
+def get_cnn_feature(path: str, duration=None, offset=None):
+    y, sr = librosa.load(path, duration=duration, offset=offset)
+
+    rms = librosa.feature.rms(y=y)
+    if is_mute(rms):
+        return None
+
+    mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+    return mfccs
