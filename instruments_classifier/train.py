@@ -43,7 +43,7 @@ def train_svm():
     y = np.array(y)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, random_state=42)
+        X, y, test_size=0.2, random_state=42)
 
     clf = svm.SVC()
     clf.fit(X_train, y_train)
@@ -74,6 +74,7 @@ def train_cnn():
             while offset <= duration - train_audio_duration:
                 feature = get_cnn_feature(
                     path, duration=train_audio_duration, offset=offset)
+                # print(feature.shape)
                 X.append(feature)
                 y.append(i)
                 offset += train_audio_duration
@@ -88,11 +89,11 @@ def train_cnn():
     y = np.array(y)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, random_state=42)
+        X, y, test_size=0.2, random_state=42)
 
-    print(X.shape[1:] + (1,))
+    print(X.shape[1:])
     model = Sequential([
-        Input(shape=X.shape[1:] + (1,)),
+        Input(shape=X.shape[1:]),
 
         Conv2D(32, (3, 3), activation='relu'),
         MaxPooling2D((2, 2)),
@@ -110,7 +111,7 @@ def train_cnn():
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    model.fit(X_train, y_train, epochs=10)
+    model.fit(X_train, y_train, epochs=5)
     _, test_acc = model.evaluate(X_test, y_test)
     print(f'Test accuracy: {test_acc}')
 

@@ -47,6 +47,14 @@ def get_cnn_feature(path: str, duration=None, offset=None):
     y, sr = librosa.load(path, duration=duration, offset=offset)
     scaler = StandardScaler()
 
-    # return librosa.feature.melspectrogram(y=y, sr=sr)
-    return scaler.fit_transform(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13))
-    # return librosa.feature.spectral_bandwidth(y=y, sr=sr)
+    # return scaler.fit_transform(librosa.feature.melspectrogram(y=y, sr=sr))
+    # return scaler.fit_transform(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=128))
+    # return scaler.fit_transform(librosa.feature.chroma_stft(y=y, sr=sr))
+
+    spectogram = scaler.fit_transform(
+        librosa.feature.melspectrogram(y=y, sr=sr))
+    mfcc = scaler.fit_transform(librosa.feature.mfcc(
+        y=y, sr=sr, n_mfcc=spectogram.shape[0]))
+    features = np.array([spectogram, mfcc])
+    # return np.transpose(features, (1, 2, 0))
+    return features.reshape(features.shape[1], features.shape[2], features.shape[0])

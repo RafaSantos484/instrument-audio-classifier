@@ -1,7 +1,5 @@
 __pycache__
 data
-*.joblib
-cnn_model*
 
 data
 test
